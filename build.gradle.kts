@@ -63,7 +63,7 @@ tasks {
                 dest(paperDir)
             }
             val paper = download.get().outputFiles.first()
-            download.get().download()
+            //download.get().download()
 
             runCatching {
                 javaexec {
