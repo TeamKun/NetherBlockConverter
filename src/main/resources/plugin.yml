@@ -1,0 +1,7 @@
+name: NetherBlockConverter
+version: <@version@>
+main: net.kunmc.lab.netherblockconverter.NetherBlockConverter
+api-version: 1.16
+prefix: NetherBlockConverter
+authors: [ POne0301 ]
+description: ネザー化マインクラフト
