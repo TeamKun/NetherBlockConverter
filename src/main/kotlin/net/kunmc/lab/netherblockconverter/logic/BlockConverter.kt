@@ -26,6 +26,9 @@ class BlockConverter {
             for (x in Config.range * -1 until Config.range +1) {
                 for (y in Config.range * -1 until Config.range +1) {
                     for (z in Config.range * -1 until Config.range + 1) {
+                        var dist = Math.sqrt((x*x + y*y + z*z).toDouble());
+                        if (dist > Config.range)
+                            continue
                         var loc = Location(p.world, px + x, py + y, pz + z)
                         var currentBlockName = loc.block.type.toString()
                         if (convertList.containsKey(currentBlockName)){
