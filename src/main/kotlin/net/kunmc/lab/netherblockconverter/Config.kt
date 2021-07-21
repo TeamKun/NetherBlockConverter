@@ -12,7 +12,6 @@ class Config {
         var isGateAppending = false
         var nomalWorldConvertList = mutableMapOf<String, Material>()
         var netherWorldConvertList = mutableMapOf<String, Material>()
-        var endWorldConvertList = mutableMapOf<String, Material>()
 
         fun loadConfig(isReload: Boolean) {
             val plugin = NetherBlockConverter.plugin
@@ -24,6 +23,7 @@ class Config {
 
             tick = config.getLong("tick")
             range = config.getInt("range")
+            isGateAppending = false
 
             val fileName = "/convertTable.csv"
             val reader = NetherBlockConverter::class.java.getResourceAsStream(fileName)

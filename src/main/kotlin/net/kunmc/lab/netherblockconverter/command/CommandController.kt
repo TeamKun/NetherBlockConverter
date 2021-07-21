@@ -27,19 +27,19 @@ class CommandController: CommandExecutor, TabCompleter {
                     sender.sendMessage("" + ChatColor.RED + "存在しないプレイヤー名が入力されました。")
                     return true
                 }
-                if (entities.isEmpty()) {
-                    sender.sendMessage("" + ChatColor.RED + "サーバに接続していないプレイヤー名が入力されました。")
+                if (entities.isEmpty() || args[1] == "@e") {
+                    sender.sendMessage("" + ChatColor.RED + "存在しないまたはサーバに接続していないプレイヤー名が入力されました。")
                     return true
                 }
                 entities.forEach {
                     if (GameManager.converterPlayers.contains(it.uniqueId)) {
-                        sender.sendMessage("" + ChatColor.RED + "追加済みのプレイヤー名が入力されました。")
-                        return true
+                        sender.sendMessage("" + ChatColor.AQUA + "${it.name}は追加済みです")
+                    } else {
+                        GameManager.converterPlayers.add(it.uniqueId)
+                        sender.sendMessage("" + ChatColor.GREEN + "${it.name}のネザー化を有効化しました。")
                     }
-                    GameManager.converterPlayers.add(it.uniqueId)
-                    sender.sendMessage("" + ChatColor.GREEN + it.name + "のネザー化を有効化しました。")
-                    return true
                 }
+                return true
             }
             args[0] == CommandConst.COMMAND_REMOVE -> {
                 lateinit var entities: MutableList<Entity>
@@ -49,20 +49,23 @@ class CommandController: CommandExecutor, TabCompleter {
                     sender.sendMessage("" + ChatColor.RED + "存在しないプレイヤー名が入力されました。")
                     return true
                 }
-                if (entities.isEmpty()) {
-                    sender.sendMessage("" + ChatColor.RED + "サーバに接続していないプレイヤー名が入力されました。")
+                if (entities.isEmpty() || args[1] == "@e") {
+                    sender.sendMessage("" + ChatColor.RED + "存在しないまたはサーバに接続していないプレイヤー名が入力されました。")
                     return true
                 }
                 var removeTarget: MutableList<Entity> = arrayListOf()
                 entities.forEach {
-                    if (!GameManager.converterPlayers.contains(it.uniqueId)) {
-                        return@forEach
+                    if (GameManager.converterPlayers.contains(it.uniqueId)) {
+                        removeTarget.add(it)
                     }
-                    removeTarget.add(it)
+                }
+                if (removeTarget.size == 0) {
+                    sender.sendMessage("" + ChatColor.GREEN + "対象がいませんでした。")
+                    return true
                 }
                 removeTarget.forEach {
                     GameManager.converterPlayers.remove(it.uniqueId)
-                    sender.sendMessage("" + ChatColor.GREEN + it.name + "を削除しました。")
+                    sender.sendMessage("" + ChatColor.GREEN + "${it.name}を削除しました。")
                 }
                 return true
             }
@@ -85,6 +88,7 @@ class CommandController: CommandExecutor, TabCompleter {
                     return true
                 }
                 Config.loadConfig(true)
+                return true
             }
             args[0] == CommandConst.COMMAND_CONFIG_SET -> {
                 when {
@@ -209,7 +213,7 @@ class CommandController: CommandExecutor, TabCompleter {
                 when {
                     args[0] == CommandConst.COMMAND_ADD -> {
                         var completions_tmp: MutableList<String> = mutableListOf()
-                        completions_tmp.addAll(listOf("@a", "@p", "@r", "@s", "@e"))
+                        completions_tmp.addAll(listOf("@a", "@p", "@r", "@s"))
                         completions_tmp.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()))
                         completions.addAll(completions_tmp.stream()
                                 .filter{ e -> !GameManager.converterPlayers.contains(Bukkit.getPlayer(e)?.uniqueId) }
@@ -217,8 +221,11 @@ class CommandController: CommandExecutor, TabCompleter {
                                 .collect(Collectors.toList()))
                     }
                     args[0] == CommandConst.COMMAND_REMOVE -> {
-                        completions.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName)
-                                .filter{ e -> GameManager.converterPlayers.contains(Bukkit.getPlayer(e)?.uniqueId) }
+                        var completions_tmp: MutableList<String> = mutableListOf()
+                        completions_tmp.addAll(listOf("@a", "@p", "@r", "@s"))
+                        completions_tmp.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()))
+                        completions.addAll(completions_tmp.stream()
+                                .filter{ e -> GameManager.converterPlayers.contains(Bukkit.getPlayer(e)?.uniqueId) || e.startsWith("@") }
                                 .filter{ e -> e.startsWith(args[1]) }
                                 .collect(Collectors.toList()))
                     }
