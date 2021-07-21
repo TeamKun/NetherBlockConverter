@@ -19,6 +19,11 @@ class CommandController: CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         when {
             args[0] == CommandConst.COMMAND_ADD -> {
+                if (args.size != 2) {
+                    sender.sendMessage("" + ChatColor.RED + "引数があっていません。コマンドを確認してください。")
+                    sendUsage(sender)
+                    return true
+                }
                 lateinit var entities: MutableList<Entity>
                 try {
                     entities = Bukkit.selectEntities(sender, args[1])
@@ -41,6 +46,11 @@ class CommandController: CommandExecutor, TabCompleter {
                 return true
             }
             args[0] == CommandConst.COMMAND_REMOVE -> {
+                if (args.size != 2) {
+                    sender.sendMessage("" + ChatColor.RED + "引数があっていません。コマンドを確認してください。")
+                    sendUsage(sender)
+                    return true
+                }
                 lateinit var entities: MutableList<Entity>
                 try {
                     entities = Bukkit.selectEntities(sender, args[1])
@@ -71,6 +81,7 @@ class CommandController: CommandExecutor, TabCompleter {
             args[0] == CommandConst.COMMAND_GATE_SWITCH -> {
                 if (args.size != 1) {
                     sender.sendMessage("" + ChatColor.RED + "引数をつけられないコマンドです。コマンドを確認してください。")
+                    sendUsage(sender)
                     return true
                 }
                 Config.isGateAppending = !Config.isGateAppending
@@ -84,13 +95,24 @@ class CommandController: CommandExecutor, TabCompleter {
             args[0] == CommandConst.COMMAND_CONFIG_RELOAD -> {
                 if (args.size != 1) {
                     sender.sendMessage("" + ChatColor.RED + "引数をつけられないコマンドです。コマンドを確認してください。")
+                    sendUsage(sender)
                     return true
                 }
                 Config.loadConfig(true)
                 sender.sendMessage("" + ChatColor.GREEN + "設定をリロードしました。")
+                sendConf(sender)
                 return true
             }
             args[0] == CommandConst.COMMAND_CONFIG_SET -> {
+                if (args.size == 1) {
+                    sendConf(sender)
+                    return true
+                }
+                if (args.size != 3) {
+                    sender.sendMessage("" + ChatColor.RED + "引数があっていません。コマンドを確認してください。")
+                    sendUsage(sender)
+                    return true
+                }
                 when {
                     args[1] == CommandConst.COMMAND_CONFIG_TICK -> {
                         try {
@@ -112,10 +134,14 @@ class CommandController: CommandExecutor, TabCompleter {
                         return true
                     }
                 }
+                sender.sendMessage("" + ChatColor.RED + "設定が見つかりませんでした。コマンドを確認してください。")
+                sendConf(sender)
+                return
             }
             args[0] == CommandConst.COMMAND_CONVERT_BLOCK_ADD -> {
                 if (args.size != 4) {
                     sender.sendMessage("" + ChatColor.RED + "引数があっていません。コマンドを確認してください。")
+                    sendUsage(sender)
                     return true
                 }
                 var check = Material.getMaterial(args[1].toUpperCase())
@@ -193,7 +219,8 @@ class CommandController: CommandExecutor, TabCompleter {
                 }
             }
         }
-        return false
+        sendUsage(sender)
+        return true
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String> {
@@ -284,5 +311,33 @@ class CommandController: CommandExecutor, TabCompleter {
             }
         }
         return completions
+    }
+    private fun sendUsage(sender: CommandSender){
+        val usagePrefix = "  ${CommandConst.MAIN_COMMAND} "
+        val descPrefix = "    ";
+        sender.sendMessage("" + ChatColor.GREEN + "Usage:");
+        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_ADD}")
+        sender.sendMessage("${descPrefix}指定されたプレイヤーの周囲をネザー化")
+        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_REMOVE}")
+        sender.sendMessage("${descPrefix}指定されたプレイヤーの周囲ネザー化を停止")
+        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_GATE_SWITCH}")
+        sender.sendMessage("${descPrefix}ネザーゲートポータル作成プレイヤーの周囲ネザー化on/off切り替え")
+        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_CONFIG_RELOAD}")
+        sender.sendMessage("${descPrefix}conf-setで指定できる値と${CommandConst.COMMAND_GATE_SWITCH}で設定した状態の初期化")
+        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_CONFIG_SET} ${CommandConst.COMMAND_CONFIG_TICK} <数字>")
+        sender.sendMessage("${descPrefix}ネザー化処理の処理間隔(Tick, デフォルト10)")
+        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_CONFIG_SET} ${CommandConst.COMMAND_CONFIG_RANGE} <数字>")
+        sender.sendMessage("${descPrefix}ネザー化処理の範囲(デフォルト6)")
+    }
+    private fun sendConf(sender: CommandSender){
+        sender.sendMessage("" + ChatColor.GREEN + "設定値一覧:")
+        sender.sendMessage("  ${CommandConst.COMMAND_CONFIG_TICK}: ${Config.tick}")
+        sender.sendMessage("  ${CommandConst.COMMAND_CONFIG_RANGE}: ${Config.range}")
+        sender.sendMessage("  ${CommandConst.COMMAND_GATE_SWITCH}: ${if (Config.isGateAppending) "on" else "off"}")
+        var showList = mutableListOf<String>()
+        for (p in Bukkit.getOnlinePlayers().stream().filter{ e -> GameManager.converterPlayers.contains(e.player?.uniqueId)}.collect(Collectors.toList())){
+            showList.add(p.name)
+        }
+        sender.sendMessage("  ネザー化プレイヤー: $showList")
     }
 }
