@@ -6,6 +6,7 @@ import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.data.Directional
 import org.bukkit.block.data.type.Stairs
+import org.bukkit.block.data.type.TrapDoor
 import org.bukkit.entity.Player
 
 class BlockConverter {
@@ -37,7 +38,7 @@ class BlockConverter {
                              */
 
                             val newMatrial = convertList[currentBlockName] ?: return
-                            if (currentBlock.blockData is Stairs){
+                            if (currentBlock.blockData is Stairs) {
                                 var newBlockData = newMatrial.createBlockData()
                                 (newBlockData as Stairs).facing = (currentBlock.blockData as Stairs).facing
                                 newBlockData.half = (currentBlock.blockData as Stairs).half
@@ -45,11 +46,21 @@ class BlockConverter {
 
                                 currentBlock.type = newMatrial
                                 currentBlock.blockData = newBlockData
-                            } else if (currentBlock.type == Material.WALL_TORCH || currentBlock.type == Material.SOUL_WALL_TORCH){
+                            } else if (currentBlock.type == Material.WALL_TORCH || currentBlock.type == Material.SOUL_WALL_TORCH) {
                                 // TORCHはAPIがあまりなさそうなのでcreate時に方向指定をする
                                 // https://www.spigotmc.org/threads/how-do-you-place-an-upward-facing-button-with-blockdata.443635/
                                 val dir = (currentBlock.blockData as Directional).facing.toString().toLowerCase()
                                 var newBlockData = newMatrial.createBlockData("[facing=${dir}]")
+                                currentBlock.type = newMatrial
+                                currentBlock.blockData = newBlockData
+                            } else if(currentBlock.blockData is TrapDoor){
+                                var newBlockData = newMatrial.createBlockData()
+                                (newBlockData as TrapDoor).facing = (currentBlock.blockData as TrapDoor).facing
+                                newBlockData.isOpen = (currentBlock.blockData as TrapDoor).isOpen
+                                newBlockData.half = (currentBlock.blockData as TrapDoor).half
+                                newBlockData.isPowered = (currentBlock.blockData as TrapDoor).isPowered
+                                newBlockData.isWaterlogged = (currentBlock.blockData as TrapDoor).isWaterlogged
+
                                 currentBlock.type = newMatrial
                                 currentBlock.blockData = newBlockData
                             } else {

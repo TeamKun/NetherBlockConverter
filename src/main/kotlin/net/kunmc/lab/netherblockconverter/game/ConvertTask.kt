@@ -1,11 +1,8 @@
 package net.kunmc.lab.netherblockconverter.game
 
-import net.kunmc.lab.netherblockconverter.Config
 import net.kunmc.lab.netherblockconverter.logic.BlockConverter
 import org.bukkit.Bukkit
-import org.bukkit.Bukkit.getLogger
 import org.bukkit.GameMode
-import org.bukkit.Location
 import org.bukkit.scheduler.BukkitRunnable
 
 class ConvertTask: BukkitRunnable() {

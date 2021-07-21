@@ -4,7 +4,6 @@ import net.kunmc.lab.netherblockconverter.Config
 import net.kunmc.lab.netherblockconverter.game.GameManager
 import net.kunmc.lab.netherblockconverter.game.TaskManager
 import org.bukkit.Bukkit
-import org.bukkit.Bukkit.getLogger
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.command.Command
@@ -88,6 +87,7 @@ class CommandController: CommandExecutor, TabCompleter {
                     return true
                 }
                 Config.loadConfig(true)
+                sender.sendMessage("" + ChatColor.GREEN + "設定をリロードしました。")
                 return true
             }
             args[0] == CommandConst.COMMAND_CONFIG_SET -> {
@@ -198,7 +198,6 @@ class CommandController: CommandExecutor, TabCompleter {
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String> {
         var completions: MutableList<String> = mutableListOf()
-        getLogger().info(args.size.toString())
         when (args.size) {
             1 -> {
                 completions.addAll(listOf(CommandConst.COMMAND_ADD,

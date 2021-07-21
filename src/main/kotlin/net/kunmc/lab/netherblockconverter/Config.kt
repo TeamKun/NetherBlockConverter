@@ -1,9 +1,6 @@
 package net.kunmc.lab.netherblockconverter
 
-import org.bukkit.Bukkit.getLogger
 import org.bukkit.Material
-import org.bukkit.entity.Player
-import java.io.File
 
 class Config {
     companion object {
@@ -30,7 +27,6 @@ class Config {
             nomalWorldConvertList.clear()
             netherWorldConvertList.clear()
             reader.bufferedReader().forEachLine {
-                getLogger().info(it)
                 var convertSetting = it.split(",")
                 if (convertSetting.size <2) return@forEachLine
                 var material = Material.getMaterial(convertSetting[1])
@@ -47,7 +43,7 @@ class Config {
                 }
             }
 
-            // TODO: 調査用のコード、後で消す
+            // 調査用のコード
             //for(mat in Material.values()) {
             //    getLogger().info(mat.name + "," + mat.isAir + "," + mat.isBlock + ","
             //            + mat.isEdible + "," + mat.isBurnable + "," + mat.isEmpty + "," + mat.isFlammable + ","
