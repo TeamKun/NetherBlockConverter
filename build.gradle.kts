@@ -63,7 +63,7 @@ tasks {
                 dest(paperDir)
             }
             val paper = download.get().outputFiles.first()
-            //download.get().download()
+            download.get().download()
 
             runCatching {
                 javaexec {
@@ -81,7 +81,7 @@ tasks {
                                 .replace("spawn-protection=16", "spawn-protection=0")
                                 .replace("gamemode=survival", "gamemode=creative")
                                 .replace("level-name=world", "level-name=dev_world")
-                                .replace("level-type=default", "level-type=flat")
+                                //.replace("level-type=default", "level-type=flat")
                                 .replace("max-tick-time=60000", "max-tick-time=-1")
                                 .replace("view-distance=10", "view-distance=16"), Charsets.UTF_8
                 )
