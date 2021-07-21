@@ -9,12 +9,10 @@ class Config {
     companion object {
         var tick: Long = 1
         var range = 1
-        var converterPlayers = mutableListOf<Player>()
-        var isGateAppending = true
+        var isGateAppending = false
         var nomalWorldConvertList = mutableMapOf<String, Material>()
         var netherWorldConvertList = mutableMapOf<String, Material>()
         var endWorldConvertList = mutableMapOf<String, Material>()
-        private var blockList = mutableMapOf<String, Material>()
 
         fun loadConfig(isReload: Boolean) {
             val plugin = NetherBlockConverter.plugin
@@ -29,7 +27,10 @@ class Config {
 
             val fileName = "/convertTable.csv"
             val reader = NetherBlockConverter::class.java.getResourceAsStream(fileName)
+            nomalWorldConvertList.clear()
+            netherWorldConvertList.clear()
             reader.bufferedReader().forEachLine {
+                getLogger().info(it)
                 var convertSetting = it.split(",")
                 if (convertSetting.size <2) return@forEachLine
                 var material = Material.getMaterial(convertSetting[1])

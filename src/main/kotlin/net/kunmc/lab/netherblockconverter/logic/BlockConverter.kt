@@ -1,13 +1,12 @@
 package net.kunmc.lab.netherblockconverter.logic
 
 import net.kunmc.lab.netherblockconverter.Config
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
+import org.bukkit.block.data.Directional
+import org.bukkit.block.data.type.Stairs
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
-import java.util.*
 
 class BlockConverter {
     companion object {
@@ -29,12 +28,32 @@ class BlockConverter {
                         var dist = Math.sqrt((x*x + y*y + z*z).toDouble());
                         if (dist > Config.range)
                             continue
-                        var loc = Location(p.world, px + x, py + y, pz + z)
-                        var currentBlockName = loc.block.type.toString()
-                        if (convertList.containsKey(currentBlockName)){
-                            var newBlock = convertList[currentBlockName]
-                            newBlock?.let {
-                                loc.block.type = it
+                        var currentBlock = Location(p.world, px + x, py + y, pz + z).block
+                        val currentBlockName = currentBlock.type.toString()
+                        if (convertList.containsKey(currentBlockName)) {
+                            /**
+                             * ブロックの更新処理
+                             *   - 基本的にはtypeを更新するだけだが、階段や松明など配置向きはBlockDataを更新する必要がある
+                             */
+
+                            val newMatrial = convertList[currentBlockName] ?: return
+                            if (currentBlock.blockData is Stairs){
+                                var newBlockData = newMatrial.createBlockData()
+                                (newBlockData as Stairs).facing = (currentBlock.blockData as Stairs).facing
+                                newBlockData.half = (currentBlock.blockData as Stairs).half
+                                newBlockData.shape = (currentBlock.blockData as Stairs).shape
+
+                                currentBlock.type = newMatrial
+                                currentBlock.blockData = newBlockData
+                            } else if (currentBlock.type == Material.WALL_TORCH || currentBlock.type == Material.SOUL_WALL_TORCH){
+                                // TORCHはAPIがあまりなさそうなのでcreate時に方向指定をする
+                                // https://www.spigotmc.org/threads/how-do-you-place-an-upward-facing-button-with-blockdata.443635/
+                                val dir = (currentBlock.blockData as Directional).facing.toString().toLowerCase()
+                                var newBlockData = newMatrial.createBlockData("[facing=${dir}]")
+                                currentBlock.type = newMatrial
+                                currentBlock.blockData = newBlockData
+                            } else {
+                                currentBlock.type = newMatrial
                             }
                         }
                     }

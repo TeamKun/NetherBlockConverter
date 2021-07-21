@@ -2,6 +2,7 @@ package net.kunmc.lab.netherblockconverter
 
 import net.kunmc.lab.netherblockconverter.command.CommandConst
 import net.kunmc.lab.netherblockconverter.command.CommandController
+import net.kunmc.lab.netherblockconverter.events.EventListener
 import net.kunmc.lab.netherblockconverter.game.TaskManager
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -16,6 +17,7 @@ class NetherBlockConverter : JavaPlugin() {
         Config.loadConfig(false)
 
         getCommand(CommandConst.MAIN_COMMAND)?.setExecutor(CommandController())
+        server.pluginManager.registerEvents(EventListener(), this)
         TaskManager.runConvertTask()
         getLogger().info("NetherBlockConverter Plugin is enabled")
     }

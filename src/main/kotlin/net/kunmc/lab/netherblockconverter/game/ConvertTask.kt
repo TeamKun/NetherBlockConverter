@@ -13,7 +13,6 @@ class ConvertTask: BukkitRunnable() {
             var p = it.player
             if (!GameManager.converterPlayers.contains(p?.uniqueId)) return@lit
             p?.let {
-                getLogger().info("AAA")
                 BlockConverter.convertBlock(p)
             }
         }
