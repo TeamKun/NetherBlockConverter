@@ -4,20 +4,22 @@ import net.kunmc.lab.netherblockconverter.Config
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
+import org.bukkit.block.Block
 import org.bukkit.block.data.Directional
+import org.bukkit.block.data.type.Door
 import org.bukkit.block.data.type.Stairs
 import org.bukkit.block.data.type.TrapDoor
 import org.bukkit.entity.Player
 
 class BlockConverter {
     companion object {
-        fun convertBlock(p: Player){
+        fun convertBlock(p: Player) {
             if (p.getLocation().getWorld().environment == World.Environment.NORMAL) {
                 convertTargetBlock(p, Config.nomalWorldConvertList)
             } else if (p.getLocation().getWorld().environment == World.Environment.NETHER) {
                 convertTargetBlock(p, Config.netherWorldConvertList)
             }
-       }
+        }
         private fun convertTargetBlock(p: Player, convertList: Map<String, Material>) {
             var px = p.getLocation().x
             var py = p.getLocation().y
@@ -63,6 +65,14 @@ class BlockConverter {
 
                                 currentBlock.type = newMatrial
                                 currentBlock.blockData = newBlockData
+                            //} else if(currentBlock.blockData is Door) {
+                            //    if (Location(p.world, px + x, py + y+1.0, pz + z).block.blockData is Door) {
+                            //        var anotherBlock = Location(p.world, px + x, py + y+1, pz + z).block
+                            //        updateDoor(currentBlock, anotherBlock, convertList)
+                            //    } else if (Location(p.world, px + x, py + y-1.0, pz + z).block.blockData is Door) {
+                            //        var anotherBlock = Location(p.world, px + x, py + y-1, pz + z).block
+                            //        updateDoor(currentBlock, anotherBlock, convertList)
+                            //    }
                             } else {
                                 currentBlock.type = newMatrial
                             }
@@ -71,5 +81,30 @@ class BlockConverter {
                 }
             }
         }
+        //private fun updateDoor(block: Block, anotherBlock: Block, convertList: Map<String, Material>){
+        //    // Door関連の変換、用件次第で見直して導入
+        //    var newBlockMaterial = convertList[block.type.toString()] ?: return
+        //    var newAnotherBlockMaterial = convertList[block.type.toString()] ?: return
+
+        //    var newBlockData = newBlockMaterial.createBlockData()
+        //    var newAnotherBlockData = newAnotherBlockMaterial.createBlockData()
+
+        //    (newBlockData as Door).facing = (block.blockData as Door).facing
+        //    newBlockData.half = (block.blockData as Door).half
+        //    newBlockData.isOpen = (block.blockData as Door).isOpen
+        //    newBlockData.isPowered = (block.blockData as Door).isPowered
+        //    newBlockData.hinge = (block.blockData as Door).hinge
+
+        //    (newAnotherBlockData as Door).facing = (anotherBlock.blockData as Door).facing
+        //    newAnotherBlockData.half = (anotherBlock.blockData as Door).half
+        //    newAnotherBlockData.isOpen = (anotherBlock.blockData as Door).isOpen
+        //    newAnotherBlockData.isPowered = (anotherBlock.blockData as Door).isPowered
+        //    newAnotherBlockData.hinge = (anotherBlock.blockData as Door).hinge
+
+        //    block.type = newBlockMaterial
+        //    block.blockData = newBlockData
+        //    anotherBlock.type = newAnotherBlockMaterial
+        //    anotherBlock.blockData = newAnotherBlockData
+        //}
     }
 }

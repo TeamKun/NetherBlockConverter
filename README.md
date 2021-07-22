@@ -18,7 +18,7 @@
 
     - gate-switch
 
-      ネザーゲートのポータルを作成したプレイヤー周辺のネザー化のon/offを切り替え
+      ネザーゲートのポータルを作成したプレイヤー周辺のネザー化のon/off切り替え
 
     - conf-reload
 
@@ -39,6 +39,8 @@
 
     - conf-set
 
+      コマンド単体だと現在の設定を確認
+
       - tick <数字>
 
         ネザー化の処理間隔を設定
@@ -57,3 +59,19 @@
 | tick                                               | 10                                                           |
 | range                                              | 6                                                            |
 | ブロックの変換リスト(cb-add/cb-rmで設定できる内容) | [CSVファイル](https://github.com/TeamKun/NetherBlockConverter/blob/master/src/main/resources/convertTable.csv)を参照 |
+
+## cb-add/cb-rmコマンドについて
+
+本コマンドは基本的には多用しない想定ですが、プラグインの利用の仕方によって、ブロックの変換内容を変えたい時に用います。例えば、黒曜石の変換については画面映えが大きく変わるので、必要に応じて下記の例のように実行することが予想されます。
+
+* オーバーワールドで黒曜石を溶岩に変えたい場合
+
+  ```
+  /nbc cb-add OBSIDIAN LAVA overworld
+  ```
+
+* ネザーで黒曜石を水に変えたい場合
+
+  ```
+  /nbc cb-add OBSIDIAN WATER nether
+  ```

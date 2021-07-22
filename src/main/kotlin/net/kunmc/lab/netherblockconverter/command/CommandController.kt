@@ -136,7 +136,7 @@ class CommandController: CommandExecutor, TabCompleter {
                 }
                 sender.sendMessage("" + ChatColor.RED + "設定が見つかりませんでした。コマンドを確認してください。")
                 sendConf(sender)
-                return
+                return true
             }
             args[0] == CommandConst.COMMAND_CONVERT_BLOCK_ADD -> {
                 if (args.size != 4) {
