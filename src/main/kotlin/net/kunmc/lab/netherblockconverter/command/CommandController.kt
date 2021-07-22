@@ -17,6 +17,10 @@ import java.util.stream.Collectors
 
 class CommandController: CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        if (args.isEmpty()){
+            sendUsage(sender)
+            return true
+        }
         when {
             args[0] == CommandConst.COMMAND_ADD -> {
                 if (args.size != 2) {
@@ -316,9 +320,9 @@ class CommandController: CommandExecutor, TabCompleter {
         val usagePrefix = "  ${CommandConst.MAIN_COMMAND} "
         val descPrefix = "    ";
         sender.sendMessage("" + ChatColor.GREEN + "Usage:");
-        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_ADD}")
+        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_ADD} <Player>")
         sender.sendMessage("${descPrefix}指定されたプレイヤーの周囲をネザー化")
-        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_REMOVE}")
+        sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_REMOVE} <Player>")
         sender.sendMessage("${descPrefix}指定されたプレイヤーの周囲ネザー化を停止")
         sender.sendMessage("${usagePrefix}${CommandConst.COMMAND_GATE_SWITCH}")
         sender.sendMessage("${descPrefix}ネザーゲートポータル作成プレイヤーの周囲ネザー化on/off切り替え")
