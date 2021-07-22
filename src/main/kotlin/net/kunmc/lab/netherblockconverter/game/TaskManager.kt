@@ -12,7 +12,7 @@ class TaskManager {
             convertTask?.let {
                 convertTask?.cancel();
             }
-            convertTask =  ConvertTask().runTaskTimer(NetherBlockConverter.plugin, 0, Config.tick)
+            convertTask = ConvertTask().runTaskTimer(NetherBlockConverter.plugin, 0, Config.tick)
         }
     }
 }

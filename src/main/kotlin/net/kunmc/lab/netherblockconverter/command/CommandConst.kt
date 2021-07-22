@@ -13,11 +13,4 @@ object CommandConst {
 
     const val COMMAND_CONFIG_TICK = "tick"
     const val COMMAND_CONFIG_RANGE = "range"
-
-
-    const val COMMAND_CONVERT_BLOCK_ADD = "cb-add"
-    const val COMMAND_CONVERT_BLOCK_REMOVE = "cb-rm"
-
-    const val COMMAND_CONVERT_BLOCK_OVERWORLD = "overworld"
-    const val COMMAND_CONVERT_BLOCK_NETHER = "nether"
 }

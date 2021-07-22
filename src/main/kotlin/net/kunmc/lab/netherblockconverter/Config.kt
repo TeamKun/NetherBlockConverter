@@ -28,7 +28,7 @@ class Config {
             netherWorldConvertList.clear()
             reader.bufferedReader().forEachLine {
                 var convertSetting = it.split(",")
-                if (convertSetting.size <2) return@forEachLine
+                if (convertSetting.size < 2) return@forEachLine
                 var material = Material.getMaterial(convertSetting[1])
 
                 // 0 nomal -> nether, 1 nether -> normal

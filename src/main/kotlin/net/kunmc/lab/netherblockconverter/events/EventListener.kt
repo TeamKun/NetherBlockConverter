@@ -8,9 +8,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.world.PortalCreateEvent
 
 
-class EventListener: Listener {
+class EventListener : Listener {
     @EventHandler
-    fun onCreateNehterGate(e: PortalCreateEvent ) {
+    fun onCreateNehterGate(e: PortalCreateEvent) {
         if (e.entity !is Player) return
 
         if (Config.isGateAppending) {

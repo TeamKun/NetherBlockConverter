@@ -4,14 +4,9 @@ import net.kunmc.lab.netherblockconverter.Config
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
-import org.bukkit.block.Block
 import org.bukkit.block.data.Directional
-import org.bukkit.block.data.type.Door
-import org.bukkit.block.data.type.Stairs
-import org.bukkit.block.data.type.TrapDoor
-import org.bukkit.block.data.type.Switch
+import org.bukkit.block.data.type.*
 import org.bukkit.entity.Player
-import java.awt.Button
 
 class BlockConverter {
     companion object {
@@ -22,15 +17,16 @@ class BlockConverter {
                 convertTargetBlock(p, Config.netherWorldConvertList)
             }
         }
+
         private fun convertTargetBlock(p: Player, convertList: Map<String, Material>) {
             var px = p.getLocation().x
             var py = p.getLocation().y
             var pz = p.getLocation().z
 
-            for (x in Config.range * -1 until Config.range +1) {
-                for (y in Config.range * -1 until Config.range +1) {
+            for (x in Config.range * -1 until Config.range + 1) {
+                for (y in Config.range * -1 until Config.range + 1) {
                     for (z in Config.range * -1 until Config.range + 1) {
-                        var dist = Math.sqrt((x*x + y*y + z*z).toDouble());
+                        var dist = Math.sqrt((x * x + y * y + z * z).toDouble());
                         if (dist > Config.range)
                             continue
                         var currentBlock = Location(p.world, px + x, py + y, pz + z).block
@@ -75,7 +71,7 @@ class BlockConverter {
                                 //        var anotherBlock = Location(p.world, px + x, py + y-1, pz + z).block
                                 //        updateDoor(currentBlock, anotherBlock, convertList)
                                 //    }
-                            } else if (currentBlock.blockData is Switch){
+                            } else if (currentBlock.blockData is Switch) {
                                 var newBlockData = newMatrial.createBlockData()
                                 (newBlockData as Switch).facing = (currentBlock.blockData as Switch).facing
                                 newBlockData.isPowered = (currentBlock.blockData as Switch).isPowered
@@ -83,8 +79,27 @@ class BlockConverter {
 
                                 currentBlock.type = newMatrial
                                 currentBlock.blockData = newBlockData
-                            } else {
+                            } else if (currentBlock.blockData is Gate) {
+                                var newBlockData = newMatrial.createBlockData()
+                                (newBlockData as Gate).facing = (currentBlock.blockData as Gate).facing
+                                newBlockData.facing = (currentBlock.blockData as Gate).facing
+                                newBlockData.isOpen = (currentBlock.blockData as Gate).isOpen
+                                newBlockData.isInWall = (currentBlock.blockData as Gate).isInWall
+
                                 currentBlock.type = newMatrial
+                                currentBlock.blockData = newBlockData
+                            } else if (currentBlock.blockData is Fence) {
+                                var dirs = mutableListOf<String>()
+                                if ((currentBlock.blockData as Fence).faces.size > 0) {
+                                    for(tmp in (currentBlock.blockData as Fence).faces){
+                                        dirs.add("${tmp.name.toLowerCase()}=true")
+                                    }
+                                }
+                                var newBlockData = newMatrial.createBlockData("[${dirs.joinToString(",")}]")
+                                currentBlock.type = newMatrial
+                                currentBlock.blockData = newBlockData
+                            } else {
+                                currentBlock.setType(newMatrial, false)
                             }
                         }
                     }
