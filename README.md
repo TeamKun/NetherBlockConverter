@@ -55,7 +55,7 @@
 
 | 設定名                                             | デフォルト値                                                 |
 | -------------------------------------------------- | ------------------------------------------------------------ |
-| gate-switch                                        | 周りをネザー化する                                           |
+| gate-switch                                        | 周りをネザー化しない                                         |
 | tick                                               | 10                                                           |
 | range                                              | 6                                                            |
 | ブロックの変換リスト(cb-add/cb-rmで設定できる内容) | [CSVファイル](https://github.com/TeamKun/NetherBlockConverter/blob/master/src/main/resources/convertTable.csv)を参照 |
@@ -75,3 +75,34 @@
   ```
   /nbc cb-add OBSIDIAN WATER nether
   ```
+
+## コマンド実行のケースとコマンド例
+
+* Player1の周りをネザー化させる
+
+  ```
+  /nbc add Player1
+  ```
+
+* Player1のネザー化を停止する
+
+  ```
+  /nbc rm Player1
+  ```
+
+* オーバーワールドで黒曜石を溶岩に変えるように設定する・その設定を削除する
+
+  ```
+  # 設定追加
+  /nbc cb-add OBSIDIAN LAVA overworld
+  # 設定削除
+  /nbc cb-add OBSIDIAN overworld
+  ```
+
+* ネザーゲートのポータル作成時のネザー化on/offを切り替える
+
+  ```
+  /nbc gate-switch
+  ```
+
+  
