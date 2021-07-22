@@ -9,7 +9,9 @@ import org.bukkit.block.data.Directional
 import org.bukkit.block.data.type.Door
 import org.bukkit.block.data.type.Stairs
 import org.bukkit.block.data.type.TrapDoor
+import org.bukkit.block.data.type.Switch
 import org.bukkit.entity.Player
+import java.awt.Button
 
 class BlockConverter {
     companion object {
@@ -55,7 +57,7 @@ class BlockConverter {
                                 var newBlockData = newMatrial.createBlockData("[facing=${dir}]")
                                 currentBlock.type = newMatrial
                                 currentBlock.blockData = newBlockData
-                            } else if(currentBlock.blockData is TrapDoor){
+                            } else if (currentBlock.blockData is TrapDoor) {
                                 var newBlockData = newMatrial.createBlockData()
                                 (newBlockData as TrapDoor).facing = (currentBlock.blockData as TrapDoor).facing
                                 newBlockData.isOpen = (currentBlock.blockData as TrapDoor).isOpen
@@ -65,14 +67,22 @@ class BlockConverter {
 
                                 currentBlock.type = newMatrial
                                 currentBlock.blockData = newBlockData
-                            //} else if(currentBlock.blockData is Door) {
-                            //    if (Location(p.world, px + x, py + y+1.0, pz + z).block.blockData is Door) {
-                            //        var anotherBlock = Location(p.world, px + x, py + y+1, pz + z).block
-                            //        updateDoor(currentBlock, anotherBlock, convertList)
-                            //    } else if (Location(p.world, px + x, py + y-1.0, pz + z).block.blockData is Door) {
-                            //        var anotherBlock = Location(p.world, px + x, py + y-1, pz + z).block
-                            //        updateDoor(currentBlock, anotherBlock, convertList)
-                            //    }
+                                //} else if(currentBlock.blockData is Door) {
+                                //    if (Location(p.world, px + x, py + y+1.0, pz + z).block.blockData is Door) {
+                                //        var anotherBlock = Location(p.world, px + x, py + y+1, pz + z).block
+                                //        updateDoor(currentBlock, anotherBlock, convertList)
+                                //    } else if (Location(p.world, px + x, py + y-1.0, pz + z).block.blockData is Door) {
+                                //        var anotherBlock = Location(p.world, px + x, py + y-1, pz + z).block
+                                //        updateDoor(currentBlock, anotherBlock, convertList)
+                                //    }
+                            } else if (currentBlock.blockData is Switch){
+                                var newBlockData = newMatrial.createBlockData()
+                                (newBlockData as Switch).facing = (currentBlock.blockData as Switch).facing
+                                newBlockData.isPowered = (currentBlock.blockData as Switch).isPowered
+                                newBlockData.attachedFace = (currentBlock.blockData as Switch).attachedFace
+
+                                currentBlock.type = newMatrial
+                                currentBlock.blockData = newBlockData
                             } else {
                                 currentBlock.type = newMatrial
                             }
