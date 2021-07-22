@@ -15,6 +15,8 @@ class BlockConverter {
                 convertTargetBlock(p, Config.nomalWorldConvertList)
             } else if (p.getLocation().getWorld().environment == World.Environment.NETHER) {
                 convertTargetBlock(p, Config.netherWorldConvertList)
+            } else if (p.getLocation().getWorld().environment == World.Environment.THE_END) {
+                convertTargetBlock(p, Config.endWorldConvertList)
             }
         }
 
